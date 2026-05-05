@@ -33,6 +33,10 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>aLign requires camera access to support LiDAR/camera features to align objects in augmented reality.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>aLign requires motion access to use the gyroscope and motion sensor to calibrate your orientation in augmented reality.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>RCTNewArchEnabled</key>

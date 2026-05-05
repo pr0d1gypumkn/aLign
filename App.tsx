@@ -6,7 +6,20 @@
  */
 
 import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native';
+import {
+  Platform,
+  StatusBar,
+  StyleSheet,
+  Text,
+  useColorScheme,
+  View,
+} from 'react-native';
+import {
+  PERMISSIONS,
+  RESULTS,
+  check,
+  request,
+} from 'react-native-permissions';
 import {
   SafeAreaProvider,
   useSafeAreaInsets,
@@ -18,6 +31,7 @@ function App() {
   const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
+    requestPermissions();
     const timeout = setTimeout(() => setShowSplash(false), 1200);
     return () => clearTimeout(timeout);
   }, []);
@@ -34,8 +48,26 @@ function SplashScreen() {
   return (
     <View style={styles.splashContainer}>
       <Text style={styles.splashTitle}>aLign</Text>
+      <Text style={styles.splashSubtitle}>
+        Requesting camera and motion access...
+      </Text>
     </View>
   );
+}
+
+function requestPermissions() {
+  const permissions = Platform.select({
+    ios: [PERMISSIONS.IOS.CAMERA, PERMISSIONS.IOS.MOTION],
+    android: [PERMISSIONS.ANDROID.CAMERA, PERMISSIONS.ANDROID.BODY_SENSORS],
+    default: [],
+  }) ?? [];
+
+  permissions.forEach(async (permission) => {
+    const status = await check(permission);
+    if (status !== RESULTS.GRANTED) {
+      await request(permission);
+    }
+  });
 }
 
 function AppContent() {
@@ -65,6 +97,11 @@ const styles = StyleSheet.create({
     fontSize: 48,
     fontWeight: '700',
     color: '#000000',
+  },
+  splashSubtitle: {
+    marginTop: 14,
+    fontSize: 16,
+    color: '#444444',
   },
 });
 
