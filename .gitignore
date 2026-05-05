@@ -1,4 +1,5 @@
 node_modules/
+.npm-cache/
 .env/
 dist/
 build/
@@ -18,3 +19,7 @@ coverage/
 vendor/bundle/
 ios/Pods/
 Pods/
+
+
+# Mobile Build Artifacts
+android/

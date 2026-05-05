@@ -1,18 +1,5 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import { NewAppScreen } from '@react-native/new-app-screen';
 import {
   Platform,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
 } from 'react-native';
 import {
   PERMISSIONS,
@@ -20,45 +7,19 @@ import {
   check,
   request,
 } from 'react-native-permissions';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+
+
+import React from 'react';
+import {Text, View} from 'react-native';
 import { useEffect, useState } from 'react';
+import { Camera, useCameraPermission } from 'react-native-vision-camera'
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
-  const [showSplash, setShowSplash] = useState(true);
 
-  useEffect(() => {
-    requestPermissions();
-    const timeout = setTimeout(() => setShowSplash(false), 1200);
-    return () => clearTimeout(timeout);
-  }, []);
-
-  return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      {showSplash ? <SplashScreen /> : <AppContent />}
-    </SafeAreaProvider>
-  );
-}
-
-function SplashScreen() {
-  return (
-    <View style={styles.splashContainer}>
-      <Text style={styles.splashTitle}>aLign</Text>
-      <Text style={styles.splashSubtitle}>
-        Requesting camera and motion access...
-      </Text>
-    </View>
-  );
-}
-
+// Shamelessly stolen from the react default page to request permissions 
 function requestPermissions() {
   const permissions = Platform.select({
-    ios: [PERMISSIONS.IOS.CAMERA, PERMISSIONS.IOS.MOTION],
-    android: [PERMISSIONS.ANDROID.CAMERA, PERMISSIONS.ANDROID.BODY_SENSORS],
+    ios: [PERMISSIONS.IOS.CAMERA],
+    android: [PERMISSIONS.ANDROID.CAMERA],
     default: [],
   }) ?? [];
 
@@ -70,39 +31,27 @@ function requestPermissions() {
   });
 }
 
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
 
-  return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
+
+const HelloWorldApp = () => {
+
+    // Stolen From react
+    const [showSplash, setShowSplash] = useState(true);
+  
+    useEffect(() => {
+        requestPermissions();
+        const timeout = setTimeout(() => setShowSplash(false), 1200);
+        return () => clearTimeout(timeout);
+    }, []);
+
+    // Once we have permission we can use the camera view
+    
+    return (
+      <Camera
+        style={{ flex: 1 }}
+        isActive={true}
+        device="back"
+       />
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  splashContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#ffffff',
-  },
-  splashTitle: {
-    fontSize: 48,
-    fontWeight: '700',
-    color: '#000000',
-  },
-  splashSubtitle: {
-    marginTop: 14,
-    fontSize: 16,
-    color: '#444444',
-  },
-});
-
-export default App;
+};
+export default HelloWorldApp;
